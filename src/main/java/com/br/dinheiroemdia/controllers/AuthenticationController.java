@@ -1,7 +1,6 @@
 package com.br.dinheiroemdia.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,7 +8,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.br.dinheiroemdia.configs.ControllerConfig;
@@ -31,7 +29,6 @@ public class AuthenticationController {
 	private TokenService tokenService;
 	
 	@PostMapping
-	@ResponseStatus(value = HttpStatus.CREATED)
 	public TokenOutput authenticate(@RequestBody @Valid LoginInput login) {
 		UsernamePasswordAuthenticationToken loginData = login.converter();
 		try {
