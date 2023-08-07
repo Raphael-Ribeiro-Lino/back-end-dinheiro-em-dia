@@ -18,7 +18,7 @@ public class ExecutaAposInicioDaAplicacao implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		if (!userService.existAdm()) {
-			registerUserIfNeeded("Raphael Ribeiro Lino", "raphar.lino@gmail.com", "12345678", ProfileEnum.ADMIN);
+			registerUserIfNeeded("Raphael Ribeiro Lino", "raphar.lino@gmail.com", "@Rapha12345678", ProfileEnum.ADMIN);
 		}
 	}
 
