@@ -16,13 +16,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Table(name = "user_entity")
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEntity implements UserDetails{
 
 	private static final long serialVersionUID = 1L;
@@ -34,7 +38,7 @@ public class UserEntity implements UserDetails{
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "email")
+	@Column(name = "email", unique = true)
 	private String email;
 	
 	@Column(name = "password")
