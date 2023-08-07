@@ -33,18 +33,19 @@ public class UserEntity implements UserDetails{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
 	private Long id;
 	
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 	
-	@Column(name = "email", unique = true)
+	@Column(name = "email", nullable = false, unique = true, length = 320)
 	private String email;
 	
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	private String password;
 	
-	@Column(name = "profile")
+	@Column(name = "profile", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ProfileEnum profile = ProfileEnum.USER;
 
