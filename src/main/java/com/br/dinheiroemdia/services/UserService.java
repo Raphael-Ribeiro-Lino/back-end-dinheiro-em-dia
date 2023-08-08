@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.br.dinheiroemdia.entities.UserEntity;
 import com.br.dinheiroemdia.enums.ProfileEnum;
+import com.br.dinheiroemdia.exceptions.BadRequestBussinessException;
 import com.br.dinheiroemdia.exceptions.NotFoundBussinessException;
 import com.br.dinheiroemdia.repositories.UserRepository;
 
@@ -24,11 +25,18 @@ public class UserService {
 			return false;
 		}
 	}
+	
+	public void existUser(String email) {
+		if(userRepository.findByEmail(email).isPresent()) {
+			throw new BadRequestBussinessException("O endereço de e-mail já está registrado. Por favor, escolha um endereço de e-mail diferente ou faça login na sua conta existente");
+		}
+	}
 
 	@Transactional
-	public void register(UserEntity userEntity) {
+	public UserEntity register(UserEntity userEntity) {
+		existUser(userEntity.getEmail());
 		userEntity.setPassword(new BCryptPasswordEncoder().encode(userEntity.getPassword()));
-		userRepository.save(userEntity);
+		return userRepository.save(userEntity);
 	}
 
 	public UserEntity findByEmail(String email) {
