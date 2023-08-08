@@ -2,6 +2,7 @@ package com.br.dinheiroemdia.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(ControllerConfig.PRE_URL + "/user")
+@CrossOrigin(origins = {"http://localhost", "http://localhost:4200" })
 public class UserController {
 
 	@Autowired
