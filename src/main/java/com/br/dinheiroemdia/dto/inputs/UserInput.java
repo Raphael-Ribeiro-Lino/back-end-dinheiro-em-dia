@@ -27,4 +27,8 @@ public class UserInput {
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Senha inválida. A senha deve atender aos seguintes critérios: Ter pelo menos 8 caracteres, incluir pelo menos uma letra maiúscula ou minúscula, incluir pelo menos um número e incluir pelo menos um caractere especial entre @, $, !, %, *, ?, &.")
 	private String password;
 
+	@NotBlank(message = "Repetir a senha é obrigatório")
+	@Length(min = 8, max = 255, message = "A senha deve ter no mínimo 8 caracteres e no máximo 255 caracteres")
+	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Senha inválida. A senha deve atender aos seguintes critérios: Ter pelo menos 8 caracteres, incluir pelo menos uma letra maiúscula ou minúscula, incluir pelo menos um número e incluir pelo menos um caractere especial entre @, $, !, %, *, ?, &.")
+	private String repeatPassword;
 }

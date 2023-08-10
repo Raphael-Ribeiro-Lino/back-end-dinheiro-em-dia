@@ -32,6 +32,7 @@ public class UserController {
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public UserOutput register(@RequestBody @Valid UserInput userInput) {
+		userService.verifyPasswords(userInput);
 		UserEntity userEntity = userConvert.inputToEntity(userInput);
 		UserEntity user = userService.register(userEntity);
 		return userConvert.entityToOutput(user);

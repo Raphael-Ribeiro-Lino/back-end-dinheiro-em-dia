@@ -34,6 +34,7 @@ public class RegisterUserControllerTest {
 		this.userInput.setName("Alan Mathison Turing");
 		this.userInput.setEmail("alan.exemplo@email.com");
 		this.userInput.setPassword("@Mat1234");
+		this.userInput.setRepeatPassword("@Mat1234");
 	}
 
 	@Test
@@ -106,37 +107,84 @@ public class RegisterUserControllerTest {
 				"$.[?(@.message == 'O endereço de e-mail já está registrado. Por favor, escolha um endereço de e-mail diferente ou faça login na sua conta existente')]")
 				.exists());
 	}
-	
+
 	@Test
 	void quando_cadastrarUsuarioSemSenha_Entao_RetornaErroSenhaObrigatorio() throws Exception {
 		this.userInput.setPassword("");
 		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
 		result.andExpect(jsonPath("$.campos[?(@.message == 'A senha é obrigatória')]").exists());
 	}
-	
+
 	@Test
 	void quando_cadastrarUsuarioSenhaNula_Entao_RetornaErroSenhaObrigatorio() throws Exception {
 		this.userInput.setPassword(null);
 		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
 		result.andExpect(jsonPath("$.campos[?(@.message == 'A senha é obrigatória')]").exists());
 	}
-	
+
 	@Test
 	void quando_cadastrarUsuarioSenhaTamanhoMaximoInvalido_Entao_RetornaErroSenhaTamanhoInvalido() throws Exception {
-		this.userInput.setPassword("exemplo321abcdefghijklmnopqrstuvwxyz12345adsadasasdasdasdasdasdasdsadasdasm,jdkajsdlkajslkdlkassajdasjdlkajdklsjdklsjalkdjaskldjklasjdklasdjklasjdklasjdkasjdklasjdklasjdklasjdklasjdjdjdjjddjjdjdjdjsj67890@example321abcdefghijklmnopqrstuvwxyz1234567890.com.br");	
+		this.userInput.setPassword(
+				"exemplo321abcdefghijklmnopqrstuvwxyz12345adsadasasdasdasdasdasdasdsadasdasm,jdkajsdlkajslkdlkassajdasjdlkajdklsjdklsjalkdjaskldjklasjdklasdjklasjdklasjdkasjdklasjdklasjdklasjdklasjdjdjdjjddjjdjdjdjsj67890@example321abcdefghijklmnopqrstuvwxyz1234567890.com.br");
 		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
-		result.andExpect(jsonPath("$.campos[?(@.message == 'A senha deve ter no mínimo 8 caracteres e no máximo 255 caracteres')]").exists());
+		result.andExpect(jsonPath(
+				"$.campos[?(@.message == 'A senha deve ter no mínimo 8 caracteres e no máximo 255 caracteres')]")
+				.exists());
 	}
-	
+
 	@Test
 	void quando_cadastrarUsuarioSenhaTamanhoMinimoInvalido_Entao_RetornaErroSenhaTamanhoInvalido() throws Exception {
 		this.userInput.setPassword("@Rapha1");
 		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
-		result.andExpect(jsonPath("$.campos[?(@.message == 'A senha deve ter no mínimo 8 caracteres e no máximo 255 caracteres')]").exists());
+		result.andExpect(jsonPath(
+				"$.campos[?(@.message == 'A senha deve ter no mínimo 8 caracteres e no máximo 255 caracteres')]")
+				.exists());
 	}
-	
+
 	@Test
-	void quando_cadastrarUsuario_Entao_RetornaSucesso() throws Exception{
+	void quando_cadastrarUsuarioSemRepetirSenha_Entao_RetornaErroRepetirSenhaObrigatorio() throws Exception {
+		this.userInput.setRepeatPassword("");
+		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
+		result.andExpect(jsonPath("$.campos[?(@.message == 'Repetir a senha é obrigatório')]").exists());
+	}
+
+	@Test
+	void quando_cadastrarUsuarioRepetirSenhaNula_Entao_RetornaErroRepetirSenhaObrigatorio() throws Exception {
+		this.userInput.setRepeatPassword(null);
+		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
+		result.andExpect(jsonPath("$.campos[?(@.message == 'Repetir a senha é obrigatório')]").exists());
+	}
+
+	@Test
+	void quando_cadastrarUsuarioRepetirSenhaTamanhoMaximoInvalido_Entao_RetornaErroRepetirSenhaTamanhoInvalido()
+			throws Exception {
+		this.userInput.setRepeatPassword(
+				"exemplo321abcdefghijklmnopqrstuvwxyz12345adsadasasdasdasdasdasdasdsadasdasm,jdkajsdlkajslkdlkassajdasjdlkajdklsjdklsjalkdjaskldjklasjdklasdjklasjdklasjdkasjdklasjdklasjdklasjdklasjdjdjdjjddjjdjdjdjsj67890@example321abcdefghijklmnopqrstuvwxyz1234567890.com.br");
+		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
+		result.andExpect(jsonPath(
+				"$.campos[?(@.message == 'A senha deve ter no mínimo 8 caracteres e no máximo 255 caracteres')]")
+				.exists());
+	}
+
+	@Test
+	void quando_cadastrarUsuarioRepetirSenhaTamanhoMinimoInvalido_Entao_RetornaErroRepetirSenhaTamanhoInvalido()
+			throws Exception {
+		this.userInput.setRepeatPassword("@Rapha1");
+		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
+		result.andExpect(jsonPath(
+				"$.campos[?(@.message == 'A senha deve ter no mínimo 8 caracteres e no máximo 255 caracteres')]")
+				.exists());
+	}
+
+	@Test
+	void quando_cadastrarUsuarioSenhasDiferentes_Entao_RetornaErroSenhasDiferentes() throws Exception {
+		this.userInput.setRepeatPassword("@Rapha15675675675");
+		ResultActions result = mvc.createdWithBadRequest(uri, userInput);
+		result.andExpect(jsonPath("$.[?(@.message == 'As senhas não coincidem')]").exists());
+	}
+
+	@Test
+	void quando_cadastrarUsuario_Entao_RetornaSucesso() throws Exception {
 		ResultActions result = mvc.create(uri, userInput);
 		result.andExpect(jsonPath("id").exists());
 		result.andExpect(jsonPath("name").value(userInput.getName()));

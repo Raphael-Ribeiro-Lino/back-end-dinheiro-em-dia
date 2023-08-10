@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.br.dinheiroemdia.dto.inputs.UserInput;
 import com.br.dinheiroemdia.entities.UserEntity;
 import com.br.dinheiroemdia.enums.ProfileEnum;
 import com.br.dinheiroemdia.exceptions.BadRequestBussinessException;
@@ -45,5 +46,11 @@ public class UserService {
 
 	public UserEntity findById(Long id) {
 		return userRepository.findById(id).orElseThrow(() -> new NotFoundBussinessException("Usuário " + id + " não encontrado"));
+	}
+
+	public void verifyPasswords( UserInput userInput) {
+		if(!userInput.getPassword().equals(userInput.getRepeatPassword())) {
+			throw new BadRequestBussinessException("As senhas não coincidem");
+		}
 	}
 }
