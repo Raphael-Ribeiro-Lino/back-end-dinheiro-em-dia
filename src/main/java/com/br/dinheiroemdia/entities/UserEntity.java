@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "user_entity")
+@Table(name = "tb_user_entity")
 @Entity
 @Getter
 @Setter
