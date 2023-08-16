@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.br.dinheiroemdia.configs.ControllerConfig;
 import com.br.dinheiroemdia.converts.UserConvert;
+import com.br.dinheiroemdia.dto.inputs.EmailRedefinePasswordInput;
 import com.br.dinheiroemdia.dto.inputs.UserInput;
 import com.br.dinheiroemdia.dto.outputs.UserOutput;
 import com.br.dinheiroemdia.entities.UserEntity;
@@ -36,5 +37,12 @@ public class UserController {
 		UserEntity userEntity = userConvert.inputToEntity(userInput);
 		UserEntity user = userService.register(userEntity);
 		return userConvert.entityToOutput(user);
+	}
+	
+	@PostMapping("/redefine-password")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public void redefinePassword(@RequestBody @Valid EmailRedefinePasswordInput emailRedefinePasswordInput) {
+		UserEntity userFound = userService.findByEmail(emailRedefinePasswordInput.getEmail());
+		userService.sendEmailRedefinePassword(userFound);
 	}
 }

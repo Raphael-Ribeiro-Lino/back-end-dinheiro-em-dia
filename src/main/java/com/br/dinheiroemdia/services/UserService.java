@@ -1,10 +1,14 @@
 package com.br.dinheiroemdia.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.br.dinheiroemdia.dto.inputs.UserInput;
+import com.br.dinheiroemdia.entities.LayoutEmailEntity;
+import com.br.dinheiroemdia.entities.RedefinePasswordEntity;
 import com.br.dinheiroemdia.entities.UserEntity;
 import com.br.dinheiroemdia.enums.ProfileEnum;
 import com.br.dinheiroemdia.exceptions.BadRequestBussinessException;
@@ -18,7 +22,16 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private RedefinePasswordService redefinePasswordService;
+	
+	@Autowired
+	private LayoutEmailService layoutEmailService;
 
+	@Autowired
+	private EmailService emailService;
+	
 	public boolean existAdm() {
 		if(userRepository.findByProfile(ProfileEnum.ADMIN).isPresent()) {
 			return true;
@@ -52,5 +65,30 @@ public class UserService {
 		if(!userInput.getPassword().equals(userInput.getRepeatPassword())) {
 			throw new BadRequestBussinessException("As senhas não coincidem");
 		}
+	}
+
+	@Transactional
+	public void sendEmailRedefinePassword(UserEntity userFound) {
+		Optional<RedefinePasswordEntity> redefinePasswordEntity = redefinePasswordService.findByUser(userFound);
+		RedefinePasswordEntity redefinePassword;
+		if(redefinePasswordEntity.isPresent()) {
+			redefinePasswordService.delete(redefinePasswordEntity.get());
+			redefinePassword = redefinePasswordService.create(userFound);
+		}else {
+			redefinePassword = redefinePasswordService.create(userFound);
+		}
+		
+		LayoutEmailEntity layoutEmailRedifinirSenha = layoutEmailService.findByName("Redefinir Senha");
+		
+		String body = redefineBody(layoutEmailRedifinirSenha.getBody(), redefinePassword);
+		
+		LayoutEmailEntity layoutEmailEntity = new LayoutEmailEntity(null, layoutEmailRedifinirSenha.getName(),
+				layoutEmailRedifinirSenha.getSourceEmail(), layoutEmailRedifinirSenha.getSubject(), body);
+		
+		emailService.sendEmail(userFound.getEmail(), layoutEmailEntity);
+	}
+
+	private String redefineBody(String body, RedefinePasswordEntity redefinePassword) {
+		return body.replace("{HASH}", redefinePassword.getHash());
 	}
 }
