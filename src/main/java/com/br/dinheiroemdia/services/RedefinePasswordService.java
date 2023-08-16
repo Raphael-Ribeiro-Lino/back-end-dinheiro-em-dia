@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.br.dinheiroemdia.entities.RedefinePasswordEntity;
 import com.br.dinheiroemdia.entities.UserEntity;
+import com.br.dinheiroemdia.exceptions.BadRequestBussinessException;
+import com.br.dinheiroemdia.exceptions.NotFoundBussinessException;
 import com.br.dinheiroemdia.repositories.RedefinePasswordRepository;
 
 import jakarta.transaction.Transactional;
@@ -37,5 +39,13 @@ public class RedefinePasswordService {
 		redefinePasswordEntity.setHash(hash);
 		redefinePasswordEntity.setUser(userFound);
 		return redefinePasswordRepository.saveAndFlush(redefinePasswordEntity);
+	}
+
+	public void verifyHash(String hash) {
+		RedefinePasswordEntity redefinePasswordEntity = redefinePasswordRepository.findByHash(hash)
+				.orElseThrow(() -> new NotFoundBussinessException("Hash não encontrado"));
+		if(redefinePasswordEntity.getExpirationTime().isBefore(LocalDateTime.now())) {
+			throw new BadRequestBussinessException("Hash expirado! Envie o e-mail novamente para gerar outro hash");
+		}
 	}
 }

@@ -11,4 +11,6 @@ public interface RedefinePasswordRepository extends JpaRepository<RedefinePasswo
 
 	Optional<RedefinePasswordEntity> findByUser(UserEntity userFound);
 
+	Optional<RedefinePasswordEntity> findByHash(String hash);
+
 }
