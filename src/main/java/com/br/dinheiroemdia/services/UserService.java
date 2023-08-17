@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.br.dinheiroemdia.dto.inputs.UserInput;
 import com.br.dinheiroemdia.entities.LayoutEmailEntity;
 import com.br.dinheiroemdia.entities.RedefinePasswordEntity;
 import com.br.dinheiroemdia.entities.UserEntity;
@@ -61,8 +60,8 @@ public class UserService {
 		return userRepository.findById(id).orElseThrow(() -> new NotFoundBussinessException("Usuário " + id + " não encontrado"));
 	}
 
-	public void verifyPasswords( UserInput userInput) {
-		if(!userInput.getPassword().equals(userInput.getRepeatPassword())) {
+	public void verifyPasswords(String password, String repeatPassword) {
+		if(!password.equals(repeatPassword)) {
 			throw new BadRequestBussinessException("As senhas não coincidem");
 		}
 	}
@@ -90,5 +89,15 @@ public class UserService {
 
 	private String redefineBody(String body, RedefinePasswordEntity redefinePassword) {
 		return body.replace("{HASH}", redefinePassword.getHash());
+	}
+
+	@Transactional
+	public void redefinePassword(UserEntity userEntity, String password, String repeatPassword, String hash) {
+		redefinePasswordService.verifyHash(hash);
+		verifyPasswords(password, repeatPassword);
+		Optional<RedefinePasswordEntity> redefinePasswordEntity = redefinePasswordService.findByUser(userEntity);
+		userEntity.setPassword(new BCryptPasswordEncoder().encode(password));
+		userRepository.save(userEntity);
+		redefinePasswordService.delete(redefinePasswordEntity.get());
 	}
 }

@@ -48,4 +48,10 @@ public class RedefinePasswordService {
 			throw new BadRequestBussinessException("Hash expirado! Envie o e-mail novamente para gerar outro hash");
 		}
 	}
+
+	public UserEntity findUserByHash(String hash) {
+		RedefinePasswordEntity redefinePasswordEntity = redefinePasswordRepository.findByHash(hash)
+				.orElseThrow(() -> new NotFoundBussinessException("Hash não encontrado"));
+		return redefinePasswordEntity.getUser();
+	}
 }
