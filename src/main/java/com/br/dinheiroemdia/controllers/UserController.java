@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(ControllerConfig.PRE_URL + "/user")
-@CrossOrigin(origins = { "http://localhost", "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost", "http://localhost:4200", "http://localhost:4200/*" })
 public class UserController {
 
 	@Autowired
@@ -49,7 +49,7 @@ public class UserController {
 
 	@PostMapping("/redefine-password")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void redefinePassword(@RequestBody @Valid EmailRedefinePasswordInput emailRedefinePasswordInput) {
+	public void sendEmailRedefinePassword(@RequestBody @Valid EmailRedefinePasswordInput emailRedefinePasswordInput) {
 		UserEntity userFound = userService.findByEmail(emailRedefinePasswordInput.getEmail());
 		userService.sendEmailRedefinePassword(userFound);
 	}
@@ -61,7 +61,7 @@ public class UserController {
 	
 	@PutMapping("/redefine-password/{hash}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public void redefiniSenha(@RequestBody @Valid RedefinePasswordInput input, @PathVariable String hash) {
+	public void redefinePassword(@RequestBody @Valid RedefinePasswordInput input, @PathVariable String hash) {
 		UserEntity userEntity = redefinePasswordService.findUserByHash(hash);
 		userService.redefinePassword(userEntity, input.getPassword(), input.getRepeatPassword(), hash);
 	}
