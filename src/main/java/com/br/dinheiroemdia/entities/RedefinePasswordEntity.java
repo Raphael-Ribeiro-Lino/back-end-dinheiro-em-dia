@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tb_redefine_password")
+@Table(name = "tb_redefine_passwords")
 @Getter
 @Setter
 public class RedefinePasswordEntity {
