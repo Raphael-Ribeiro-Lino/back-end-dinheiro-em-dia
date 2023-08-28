@@ -15,7 +15,7 @@ import lombok.Setter;
 @Table(name = "tb_income_categories")
 @Getter
 @Setter
-public class IncomeCategory {
+public class IncomeCategoryEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
