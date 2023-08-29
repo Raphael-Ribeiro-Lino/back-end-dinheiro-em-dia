@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.List;
 
-import com.br.dinheiroemdia.entities.ExpenseEntity;
-import com.br.dinheiroemdia.entities.IncomeEntity;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,11 +15,11 @@ public class BudgetOutput {
 	
 	private YearMonth yearMonth;
 	
-	private List<IncomeEntity> incomes;
+	private List<IncomeOutput> incomes;
 	
 	private BigDecimal totalIncome;
 	
-	private List<ExpenseEntity> expenses;
+	private List<ExpenseOutput> expenses;
 	
 	private BigDecimal totalExpense;
 	

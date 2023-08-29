@@ -7,6 +7,8 @@ import com.br.dinheiroemdia.enums.ValueTypeEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +39,7 @@ public class ExpenseEntity {
 	private LocalDateTime date;
 
 	@Column(name = "type")
+	@Enumerated(EnumType.STRING)
 	private ValueTypeEnum type;
 	
 	@ManyToOne
