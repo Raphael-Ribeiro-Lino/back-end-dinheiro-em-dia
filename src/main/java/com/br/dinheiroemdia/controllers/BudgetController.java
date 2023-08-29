@@ -36,6 +36,7 @@ public class BudgetController {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PodeAcessarSe.EstaAutenticado
 	public BudgetOutput register(@RequestBody @Valid BudgetInput budgetInput) {
+		budgetService.verifyYearMonth(budgetInput.getYearMonth());
 		BudgetEntity budgetEntity = budgetConvert.inputToEntity(budgetInput);
 		BudgetEntity budget = budgetService.register(budgetEntity);
 		return budgetConvert.entityToOutput(budget);
