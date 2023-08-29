@@ -39,20 +39,20 @@ public class BudgetEntity {
 	private List<IncomeEntity> incomes = new ArrayList<>();
 	
 	@Column(name = "total_income")
-	private BigDecimal totalIncome;
+	private BigDecimal totalIncome = BigDecimal.ZERO;
 	
 	@OneToMany(mappedBy = "budget")
 	private List<ExpenseEntity> expenses = new ArrayList<>();
 	
 	@Column(name = "total_expense")
-	private BigDecimal totalExpense;
+	private BigDecimal totalExpense = BigDecimal.ZERO;
 	
 	@Column(name = "net_balance")
-	private BigDecimal netBalance;
+	private BigDecimal netBalance = BigDecimal.ZERO;
 	
 	@Column(name = "planned_budget")
 	private BigDecimal plannedBudget;
 	
 	@Column(name = "actual_budget")
-	private BigDecimal actualBudget;
+	private BigDecimal actualBudget = BigDecimal.ZERO;
 }

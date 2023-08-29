@@ -36,6 +36,7 @@ public class IncomeController {
 	public IncomeOutput register(@RequestBody @Valid IncomeInput incomeInput) {
 		IncomeEntity incomeEntity = incomeConvert.inputToEntity(incomeInput);
 		IncomeEntity income = incomeService.register(incomeEntity, incomeInput.getBudgetId());
+		incomeService.updateBudgetTotalIncome(income);
 		return incomeConvert.entityToOutput(income);
 	}
 }

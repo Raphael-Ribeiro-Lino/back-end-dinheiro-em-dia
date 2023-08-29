@@ -40,4 +40,9 @@ public class BudgetService {
 			throw new BadRequestBussinessException("Orçamento já cadastrado");
 		}
 	}
+
+	@Transactional
+	public void updateTotalIncome(BudgetEntity budgetEntity) {
+		budgetRepository.save(budgetEntity);
+	}
 }
