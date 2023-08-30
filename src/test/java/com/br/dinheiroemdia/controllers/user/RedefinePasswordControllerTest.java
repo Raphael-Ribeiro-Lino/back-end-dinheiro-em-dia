@@ -11,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.br.dinheiroemdia.configs.ControllerConfig;
 import com.br.dinheiroemdia.dto.inputs.EmailRedefinePasswordInput;
 import com.br.dinheiroemdia.dto.inputs.RedefinePasswordInput;
 import com.br.dinheiroemdia.utils.MyMvcMock;
@@ -31,7 +32,7 @@ public class RedefinePasswordControllerTest {
 
 	@BeforeEach
 	void setup() throws Exception {
-		this.uri = "/api-dinheiro-em-dia/user/redefine-password/";
+		this.uri = ControllerConfig.PRE_URL + "/user/redefine-password/";
 		this.uriSendEmail = "/api-dinheiro-em-dia/user/redefine-password";
 
 		this.emailRedefinePasswordInput = new EmailRedefinePasswordInput();

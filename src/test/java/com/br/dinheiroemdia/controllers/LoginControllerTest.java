@@ -11,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.br.dinheiroemdia.configs.ControllerConfig;
 import com.br.dinheiroemdia.dto.inputs.LoginInput;
 import com.br.dinheiroemdia.utils.MyMvcMock;
 
@@ -28,7 +29,7 @@ public class LoginControllerTest {
 	@BeforeEach
 	void setUp() throws Exception {
 
-		this.uri = "/api-dinheiro-em-dia/auth";
+		this.uri = ControllerConfig.PRE_URL + "/auth";
 
 		loginInput = new LoginInput();
 		loginInput.setEmail("raphar.lino@gmail.com");

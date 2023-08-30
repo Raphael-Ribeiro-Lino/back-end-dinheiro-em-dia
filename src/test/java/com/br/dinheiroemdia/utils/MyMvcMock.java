@@ -8,12 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.br.dinheiroemdia.configs.ControllerConfig;
+import com.br.dinheiroemdia.dto.inputs.LoginInput;
+import com.br.dinheiroemdia.dto.outputs.TokenOutput;
 import com.br.dinheiroemdia.entities.RedefinePasswordEntity;
 import com.br.dinheiroemdia.entities.UserEntity;
 import com.br.dinheiroemdia.services.RedefinePasswordService;
 import com.br.dinheiroemdia.services.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Component
 public class MyMvcMock {
@@ -33,6 +39,16 @@ public class MyMvcMock {
 	private ResultActions sendPost(String uri, Object object) throws Exception {
 		return mvc.perform(post(uri).content(JSON.asJsonString(object)).contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
+	}
+	
+//	private ResultActions sendPost(String token, String uri) throws Exception {
+//		return mvc.perform(post(uri).header("authorization", "Bearer "+ token)
+//				.accept(MediaType.APPLICATION_JSON));
+//	}
+	
+	private ResultActions sendPost(String uri, String token, Object objeto) throws Exception {
+		return mvc.perform(post(uri).header("authorization", "Bearer " + token).content(JSON.asJsonString(objeto))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 	}
 	
 	private ResultActions sendPut(String uri, Object objeto) throws Exception {
@@ -73,4 +89,31 @@ public class MyMvcMock {
 	public ResultActions update(String uri, Object object) throws Exception {
 		return sendPut(uri, object).andExpect(status().isOk());
 	}
+
+	public TokenOutput returnTokenAdm() throws Exception {
+		LoginInput login = new LoginInput();
+		login.setEmail("raphar.lino@gmail.com");
+		login.setPassword("@Rapha12345678");
+		MvcResult andReturn = this.autenticated(ControllerConfig.PRE_URL + "/auth", login).andReturn();
+		String contentAsString = andReturn.getResponse().getContentAsString();
+		TokenOutput token = new ObjectMapper().readValue(contentAsString, TokenOutput.class);
+		return token;
+	}
+
+	public ResultActions createWithUnauthorized(String uri, Object object) throws Exception {
+		return sendPost(uri, object).andExpect(status().isUnauthorized());
+	}
+
+	public ResultActions createWithUnauthorized(String uri, String token, Object object) throws Exception {
+		return sendPost(uri, token, object).andExpect(status().isUnauthorized());
+	}
+
+	public ResultActions createWithToken(String uri, String token, Object object) throws Exception {
+		return sendPost(uri, token, object).andExpect(status().isCreated());
+	}
+
+	public ResultActions createdWithTokenBadRequest(String uri, String token, Object object) throws Exception {
+		return sendPost(uri, token, object).andExpect(status().isBadRequest());
+	}
+
 }
