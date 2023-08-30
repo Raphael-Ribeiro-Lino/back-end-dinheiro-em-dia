@@ -23,8 +23,6 @@ public class BudgetOutput {
 	
 	private BigDecimal totalExpense;
 	
-	private BigDecimal netBalance;
-	
 	private BigDecimal plannedBudget;
 	
 	private BigDecimal actualBudget;

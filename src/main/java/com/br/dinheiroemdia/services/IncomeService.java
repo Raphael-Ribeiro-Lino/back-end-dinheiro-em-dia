@@ -31,10 +31,10 @@ public class IncomeService {
 		return incomeRepository.save(incomeEntity);
 	}
 
-	public void updateBudgetTotalIncome(IncomeEntity income) {
+	public void updateBudget(IncomeEntity income) {
 		BudgetEntity budgetEntity = budgetService.findById(income.getBudget().getId());
 		budgetEntity.setTotalIncome(defineTotalIncome());
-		budgetService.updateTotalIncome(budgetEntity);
+		budgetService.update(budgetEntity);
 	}
 
 	private BigDecimal defineTotalIncome() {

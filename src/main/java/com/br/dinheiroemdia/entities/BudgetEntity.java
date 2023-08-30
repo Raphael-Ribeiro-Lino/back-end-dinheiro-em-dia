@@ -47,9 +47,6 @@ public class BudgetEntity {
 	@Column(name = "total_expense")
 	private BigDecimal totalExpense = BigDecimal.ZERO;
 	
-	@Column(name = "net_balance")
-	private BigDecimal netBalance = BigDecimal.ZERO;
-	
 	@Column(name = "planned_budget")
 	private BigDecimal plannedBudget;
 	

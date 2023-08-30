@@ -1,5 +1,6 @@
 package com.br.dinheiroemdia.services;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.Optional;
 
@@ -42,12 +43,11 @@ public class BudgetService {
 	}
 
 	@Transactional
-	public void updateTotalIncome(BudgetEntity budgetEntity) {
+	public void update(BudgetEntity budgetEntity) {
+		BigDecimal totalIncome = budgetEntity.getTotalIncome();
+		BigDecimal totalExpense = budgetEntity.getTotalExpense();
+		budgetEntity.setActualBudget(totalIncome.subtract(totalExpense));
 		budgetRepository.save(budgetEntity);
 	}
-
-	@Transactional
-	public void updateTotalExpense(BudgetEntity budgetEntity) {
-		budgetRepository.save(budgetEntity);
-	}
+	
 }

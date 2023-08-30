@@ -39,7 +39,7 @@ public class IncomeController {
 	public IncomeOutput register(@RequestBody @Valid IncomeInput incomeInput) {
 		IncomeEntity incomeEntity = incomeConvert.inputToEntity(incomeInput);
 		IncomeEntity income = incomeService.register(incomeEntity, incomeInput.getBudgetId());
-		incomeService.updateBudgetTotalIncome(income);
+		incomeService.updateBudget(income);
 		return incomeConvert.entityToOutput(income);
 	}
 
@@ -56,6 +56,6 @@ public class IncomeController {
 	public void delete(@PathVariable Long id) {
 		IncomeEntity incomeEntity = incomeService.findById(id);
 		incomeService.delete(incomeEntity);
-		incomeService.updateBudgetTotalIncome(incomeEntity);
+		incomeService.updateBudget(incomeEntity);
 	}
 }

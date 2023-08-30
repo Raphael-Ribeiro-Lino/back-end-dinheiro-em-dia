@@ -37,7 +37,7 @@ public class ExpenseController {
 	public ExpenseOutput register(@RequestBody @Valid ExpenseInput expenseInput) {
 		ExpenseEntity expenseEntity = expenseConvert.inputToEntity(expenseInput);
 		ExpenseEntity expense = expenseService.register(expenseEntity, expenseInput.getBudgetId());
-		expenseService.updateBudgetTotalExpense(expense);
+		expenseService.updateBudget(expense);
 		return expenseConvert.entityToOutput(expense);
 	}
 }

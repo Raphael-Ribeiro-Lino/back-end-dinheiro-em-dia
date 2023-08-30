@@ -27,10 +27,10 @@ public class ExpenseService {
 		return expenseRepository.save(expenseEntity);
 	}
 
-	public void updateBudgetTotalExpense(ExpenseEntity expense) {
+	public void updateBudget(ExpenseEntity expense) {
 		BudgetEntity budgetEntity = budgetService.findById(expense.getBudget().getId());
 		budgetEntity.setTotalExpense(defineTotalExpense());
-		budgetService.updateTotalExpense(budgetEntity);
+		budgetService.update(budgetEntity);
 	}
 	
 	private BigDecimal defineTotalExpense() {
