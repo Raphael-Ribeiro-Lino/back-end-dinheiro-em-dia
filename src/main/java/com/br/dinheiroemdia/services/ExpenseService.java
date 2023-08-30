@@ -55,4 +55,9 @@ public class ExpenseService {
 		}
 	}
 
+	@Transactional
+	public void delete(ExpenseEntity expenseEntity) {
+		expenseRepository.delete(expenseEntity);
+	}
+
 }
