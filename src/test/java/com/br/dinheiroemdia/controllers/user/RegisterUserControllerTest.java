@@ -185,7 +185,7 @@ public class RegisterUserControllerTest {
 	}
 
 	@Test
-	void quando_cadastrarUsuario_Entao_RetornaSucesso() throws Exception {
+	void quando_cadastrarUsuario_Entao_RetornaCriado() throws Exception {
 		ResultActions result = mvc.create(uri, userInput);
 		result.andExpect(jsonPath("id").exists());
 		result.andExpect(jsonPath("name").value(userInput.getName()));

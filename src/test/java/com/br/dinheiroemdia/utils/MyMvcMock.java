@@ -1,5 +1,6 @@
 package com.br.dinheiroemdia.utils;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -114,6 +115,28 @@ public class MyMvcMock {
 
 	public ResultActions createdWithTokenBadRequest(String uri, String token, Object object) throws Exception {
 		return sendPost(uri, token, object).andExpect(status().isBadRequest());
+	}
+
+	public ResultActions findWithUnauthorized(String uri, Object object) throws Exception {
+		return sendGet(uri, object).andExpect(status().isUnauthorized());
+	}
+
+	private ResultActions sendGet(String uri, Object object) throws Exception {
+		return mvc.perform(get(uri).content(JSON.asJsonString(object)).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+	}
+
+	public ResultActions findWithUnauthorized(String uri, String token, Object object) throws Exception {
+		return sendGet(uri, token, object).andExpect(status().isUnauthorized());
+	}
+
+	private ResultActions sendGet(String uri, String token, Object object) throws Exception {
+		return mvc.perform(get(uri).header("authorization", "Bearer " + token).content(JSON.asJsonString(object))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
+	}
+
+	public ResultActions findWithToken(String uri, String token, Object object) throws Exception {
+		return sendGet(uri, token, object).andExpect(status().isOk());
 	}
 
 }

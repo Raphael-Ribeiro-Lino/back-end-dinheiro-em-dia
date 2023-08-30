@@ -21,7 +21,7 @@ import com.br.dinheiroemdia.utils.MyMvcMock;
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-public class RegisterBudgetControllerTest {
+public class FindByIdBudgetControllerTest {
 
 	@Autowired
 	private MyMvcMock mvc;
@@ -33,50 +33,31 @@ public class RegisterBudgetControllerTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		this.uri = ControllerConfig.PRE_URL + "/budgets";
+		this.uri = ControllerConfig.PRE_URL + "/budgets/1";
 		this.token = mvc.returnTokenAdm().getToken();
 		
 		this.budgetInput = new BudgetInput();
 		this.budgetInput.setYearMonth(YearMonth.of(2023, 2));
-		this.budgetInput.setPlannedBudget(BigDecimal.valueOf(3000));
+		this.budgetInput.setPlannedBudget(BigDecimal.valueOf(3000.00));
+		
+		mvc.createWithToken(ControllerConfig.PRE_URL + "/budgets", token, budgetInput);
 	}
 	
 	@Test
-	void quando_cadastrarOrcamentoSemMesEAno_Entao_RetornaErroMesEAnoObrigatorio() throws Exception {
-		this.budgetInput.setYearMonth(null);
-		ResultActions result = mvc.createdWithBadRequest(uri, budgetInput);
-		result.andExpect(jsonPath("$.campos[?(@.message == 'O mês e ano é obrigatório')]").exists());
-	}
-	
-	@Test
-	void quando_cadastrarOrcamentoMesEAnoJaCadastrado_Entao_RetornaErroOrcamentoJaCadastrado() throws Exception {
-		mvc.createWithToken(uri, token, budgetInput);
-		ResultActions result = mvc.createdWithTokenBadRequest(uri, token, budgetInput);
-		result.andExpect(jsonPath("$.[?(@.message == 'Orçamento já cadastrado')]").exists());
-	}
-	
-	@Test
-	void quando_cadastrarOrcamentoSemOrcamentoPlanejado_Entao_RetornaErroOrcamentoPlanejadoObrigatorio() throws Exception {
-		this.budgetInput.setPlannedBudget(null);
-		ResultActions result = mvc.createdWithBadRequest(uri, budgetInput);
-		result.andExpect(jsonPath("$.campos[?(@.message == 'O orçamento planejado é obrigatório')]").exists());
-	}
-	
-	@Test
-	void quando_cadastrarOrcamentoSemToken_Entao_RetornaErroAcessoNegado() throws Exception {
-		ResultActions result = mvc.createWithUnauthorized(uri, budgetInput);
+	void quando_buscarOrcamentoPorIdSemToken_Entao_RetornaErroAcessoNegado() throws Exception {
+		ResultActions result = mvc.findWithUnauthorized(uri, budgetInput);
 		result.andExpect(jsonPath("$.[?(@.message == 'Acesso Negado!')]").exists());
 	}
 	
 	@Test
-	void quando_cadastrarOrcamentoTokenInvalido_Entao_RetornaErroTokenInvalido() throws Exception {
-		ResultActions result = mvc.createWithUnauthorized(uri, token+1, budgetInput);
+	void quando_buscarOrcamentoPorIdTokenInvalido_Entao_RetornaErroTokenInvalido() throws Exception {
+		ResultActions result = mvc.findWithUnauthorized(uri, token+1, budgetInput);
 		result.andExpect(jsonPath("$.[?(@.message == 'Token inválido!')]").exists());
 	}
 	
 	@Test
-	void quando_cadastrarOrcamento_Entao_RetornaCriado() throws Exception {
-		ResultActions result = mvc.createWithToken(uri, token, budgetInput);
+	void quando_buscarOrcamentoPorId_Entao_RetornaOk() throws Exception {
+		ResultActions result = mvc.findWithToken(uri, token, budgetInput);
 		result.andExpect(jsonPath("id").exists());
 		result.andExpect(jsonPath("yearMonth").value(budgetInput.getYearMonth().toString()));
 		result.andExpect(jsonPath("totalIncome").value(0));

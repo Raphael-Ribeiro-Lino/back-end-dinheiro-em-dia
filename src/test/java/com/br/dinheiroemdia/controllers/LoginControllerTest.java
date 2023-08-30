@@ -110,7 +110,7 @@ public class LoginControllerTest {
 	}
 
 	@Test
-	void quando_realizarLogin_Entao_RetornaSucesso() throws Exception {
+	void quando_realizarLogin_Entao_RetornaOk() throws Exception {
 		mvc.createdLogin(uri, loginInput);
 	}
 }
