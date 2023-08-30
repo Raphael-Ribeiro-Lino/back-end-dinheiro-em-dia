@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.br.dinheiroemdia.entities.BudgetEntity;
 import com.br.dinheiroemdia.entities.ExpenseEntity;
+import com.br.dinheiroemdia.exceptions.NotFoundBussinessException;
 import com.br.dinheiroemdia.repositories.ExpenseRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +21,9 @@ public class ExpenseService {
 	
 	@Autowired
 	private BudgetService budgetService;
+	
+	@Autowired
+	private TokenService tokenService;
 
 	@Transactional
 	public ExpenseEntity register(ExpenseEntity expenseEntity, Long budgetId) {
@@ -40,6 +44,15 @@ public class ExpenseService {
 			totalExpense = totalExpense.add(expenseEntity.getAmount());
 		}
 		return totalExpense;
+	}
+
+	public ExpenseEntity findById(Long id) {
+		ExpenseEntity expenseEntity = expenseRepository.findById(id).orElseThrow(() -> new NotFoundBussinessException("Despesa " + id + " não encontrada"));
+		if(expenseEntity.getBudget().getUser() == tokenService.getUserByToken()) {
+			return expenseEntity;
+		}else {
+			throw new NotFoundBussinessException("Despesa " + id + " não encontrada");
+		}
 	}
 
 }
