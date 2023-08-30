@@ -3,6 +3,7 @@ package com.br.dinheiroemdia.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,10 +29,10 @@ public class IncomeController {
 
 	@Autowired
 	private IncomeService incomeService;
-	
+
 	@Autowired
 	private IncomeConvert incomeConvert;
-	
+
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PodeAcessarSe.EstaAutenticado
@@ -41,11 +42,20 @@ public class IncomeController {
 		incomeService.updateBudgetTotalIncome(income);
 		return incomeConvert.entityToOutput(income);
 	}
-	
+
 	@GetMapping("/{id}")
 	@PodeAcessarSe.EstaAutenticado
 	public IncomeOutput findById(@PathVariable Long id) {
 		IncomeEntity incomeEntity = incomeService.findById(id);
 		return incomeConvert.entityToOutput(incomeEntity);
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	@PodeAcessarSe.EstaAutenticado
+	public void delete(@PathVariable Long id) {
+		IncomeEntity incomeEntity = incomeService.findById(id);
+		incomeService.delete(incomeEntity);
+		incomeService.updateBudgetTotalIncome(incomeEntity);
 	}
 }

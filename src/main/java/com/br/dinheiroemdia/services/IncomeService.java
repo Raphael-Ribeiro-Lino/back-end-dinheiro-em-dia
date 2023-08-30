@@ -54,4 +54,9 @@ public class IncomeService {
 			throw new NotFoundBussinessException("Receita " + id + " não encontrada");
 		}
 	}
+
+	@Transactional
+	public void delete(IncomeEntity incomeEntity) {
+		incomeRepository.delete(incomeEntity);
+	}
 }
