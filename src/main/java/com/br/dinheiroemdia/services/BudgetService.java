@@ -45,4 +45,9 @@ public class BudgetService {
 	public void updateTotalIncome(BudgetEntity budgetEntity) {
 		budgetRepository.save(budgetEntity);
 	}
+
+	@Transactional
+	public void updateTotalExpense(BudgetEntity budgetEntity) {
+		budgetRepository.save(budgetEntity);
+	}
 }
