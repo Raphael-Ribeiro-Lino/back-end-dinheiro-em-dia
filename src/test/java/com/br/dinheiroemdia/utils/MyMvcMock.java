@@ -1,5 +1,6 @@
 package com.br.dinheiroemdia.utils;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -21,46 +22,45 @@ import com.br.dinheiroemdia.services.RedefinePasswordService;
 import com.br.dinheiroemdia.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @Component
 public class MyMvcMock {
 	@Autowired
 	private MockMvc mvc;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RedefinePasswordService redefinePasswordService;
-	
+
 	public ResultActions autenticated(String uri, Object object) throws Exception {
 		return sendPost(uri, object).andExpect(status().isOk());
 	}
-	
+
 	private ResultActions sendPost(String uri, Object object) throws Exception {
 		return mvc.perform(post(uri).content(JSON.asJsonString(object)).contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
 	}
-	
+
 //	private ResultActions sendPost(String token, String uri) throws Exception {
 //		return mvc.perform(post(uri).header("authorization", "Bearer "+ token)
 //				.accept(MediaType.APPLICATION_JSON));
 //	}
-	
+
 	private ResultActions sendPost(String uri, String token, Object objeto) throws Exception {
 		return mvc.perform(post(uri).header("authorization", "Bearer " + token).content(JSON.asJsonString(objeto))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 	}
-	
+
 	private ResultActions sendPut(String uri, Object objeto) throws Exception {
 		return mvc.perform(put(uri).content(JSON.asJsonString(objeto)).contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
 	}
-	
+
 	public ResultActions createdWithBadRequest(String uri, Object object) throws Exception {
 		return sendPost(uri, object).andExpect(status().isBadRequest());
 	}
-	
+
 	public ResultActions createdLogin(String uri, Object object) throws Exception {
 		return sendPost(uri, object).andExpect(status().isOk());
 	}
@@ -137,6 +137,26 @@ public class MyMvcMock {
 
 	public ResultActions findWithToken(String uri, String token, Object object) throws Exception {
 		return sendGet(uri, token, object).andExpect(status().isOk());
+	}
+
+	public ResultActions deleteWithUnauthorized(String uri) throws Exception {
+		return sendDelete(uri).andExpect(status().isUnauthorized());
+	}
+
+	private ResultActions sendDelete(String uri) throws Exception {
+		return mvc.perform(delete(uri));
+	}
+
+	public ResultActions deleteWithUnauthorized(String uri, String token) throws Exception {
+		return sendDelete(uri, token).andExpect(status().isUnauthorized());
+	}
+
+	private ResultActions sendDelete(String uri, String token) throws Exception {
+		return mvc.perform(delete(uri).header("authorization", "Bearer " + token));
+	}
+
+	public ResultActions deleteWithToken(String uri, String token) throws Exception {
+		return sendDelete(uri, token).andExpect(status().isNoContent());
 	}
 
 }
