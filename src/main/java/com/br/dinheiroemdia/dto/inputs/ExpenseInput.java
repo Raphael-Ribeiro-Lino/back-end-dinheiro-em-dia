@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 import com.br.dinheiroemdia.enums.ValueTypeEnum;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @Setter
 public class ExpenseInput {
 
-	@NotNull(message = "O nome é obrigatório")
+	@NotBlank(message = "O nome é obrigatório")
 	@Length(max = 255, message = "O nome deve ter no máximo 255 caracteres")
 	private String name;
 	
