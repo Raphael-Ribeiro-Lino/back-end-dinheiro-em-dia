@@ -5,6 +5,8 @@ import java.time.YearMonth;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.br.dinheiroemdia.entities.BudgetEntity;
@@ -48,6 +50,10 @@ public class BudgetService {
 		BigDecimal totalExpense = budgetEntity.getTotalExpense();
 		budgetEntity.setActualBudget(totalIncome.subtract(totalExpense));
 		budgetRepository.save(budgetEntity);
+	}
+
+	public Page<BudgetEntity> list(Pageable pagination) {
+		return budgetRepository.findAllByUser(pagination, tokenService.getUserByToken());
 	}
 	
 }

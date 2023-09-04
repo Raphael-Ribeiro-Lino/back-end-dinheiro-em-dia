@@ -1,6 +1,10 @@
 package com.br.dinheiroemdia.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +20,7 @@ import com.br.dinheiroemdia.configs.securities.PodeAcessarSe;
 import com.br.dinheiroemdia.converts.BudgetConvert;
 import com.br.dinheiroemdia.dto.inputs.BudgetInput;
 import com.br.dinheiroemdia.dto.outputs.BudgetOutput;
+import com.br.dinheiroemdia.dto.outputs.ListBudgetOutput;
 import com.br.dinheiroemdia.entities.BudgetEntity;
 import com.br.dinheiroemdia.services.BudgetService;
 
@@ -25,13 +30,13 @@ import jakarta.validation.Valid;
 @RequestMapping(ControllerConfig.PRE_URL + "/budgets")
 @CrossOrigin(origins = { "http://localhost", "http://localhost:4200", "http://localhost:4200/*" })
 public class BudgetController {
-	
+
 	@Autowired
 	private BudgetService budgetService;
-	
+
 	@Autowired
 	private BudgetConvert budgetConvert;
-	
+
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PodeAcessarSe.EstaAutenticado
@@ -41,12 +46,20 @@ public class BudgetController {
 		BudgetEntity budget = budgetService.register(budgetEntity);
 		return budgetConvert.entityToOutput(budget);
 	}
-	
+
 	@GetMapping("/{id}")
 	@PodeAcessarSe.EstaAutenticado
 	public BudgetOutput findById(@PathVariable Long id) {
 		BudgetEntity budget = budgetService.findById(id);
 		return budgetConvert.entityToOutput(budget);
+	}
+
+	@GetMapping
+	@PodeAcessarSe.EstaAutenticado
+	public Page<ListBudgetOutput> list(
+			@PageableDefault(size = 10, sort = "yearMonth", direction = Direction.ASC) Pageable pagination) {
+		Page<BudgetEntity> budgets = budgetService.list(pagination);
+		return budgetConvert.pageEntityToOutput(budgets);
 	}
 
 }
