@@ -47,12 +47,8 @@ public class IncomeService {
 	}
 
 	public IncomeEntity findById(Long id) {
-		IncomeEntity incomeEntity = incomeRepository.findById(id).orElseThrow(() -> new NotFoundBussinessException("Receita " + id + " não encontrada"));
-		if(incomeEntity.getBudget().getUser() == tokenService.getUserByToken()) {
-			return incomeEntity;
-		}else {
-			throw new NotFoundBussinessException("Receita " + id + " não encontrada");
-		}
+		return incomeRepository.findByIdAndUser(id, tokenService.getUserByToken())
+				.orElseThrow(() -> new NotFoundBussinessException("Receita " + id + " não encontrada"));
 	}
 
 	@Transactional
