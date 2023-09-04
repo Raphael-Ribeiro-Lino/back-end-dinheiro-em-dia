@@ -117,26 +117,24 @@ public class MyMvcMock {
 		return sendPost(uri, token, object).andExpect(status().isBadRequest());
 	}
 
-	public ResultActions findWithUnauthorized(String uri, Object object) throws Exception {
-		return sendGet(uri, object).andExpect(status().isUnauthorized());
+	public ResultActions findWithUnauthorized(String uri) throws Exception {
+		return sendGet(uri).andExpect(status().isUnauthorized());
 	}
 
-	private ResultActions sendGet(String uri, Object object) throws Exception {
-		return mvc.perform(get(uri).content(JSON.asJsonString(object)).contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON));
+	private ResultActions sendGet(String uri) throws Exception {
+		return mvc.perform(get(uri));
 	}
 
-	public ResultActions findWithUnauthorized(String uri, String token, Object object) throws Exception {
-		return sendGet(uri, token, object).andExpect(status().isUnauthorized());
+	public ResultActions findWithUnauthorized(String uri, String token) throws Exception {
+		return sendGet(uri, token).andExpect(status().isUnauthorized());
 	}
 
-	private ResultActions sendGet(String uri, String token, Object object) throws Exception {
-		return mvc.perform(get(uri).header("authorization", "Bearer " + token).content(JSON.asJsonString(object))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
+	private ResultActions sendGet(String uri, String token) throws Exception {
+		return mvc.perform(get(uri).header("authorization", "Bearer " + token));
 	}
 
-	public ResultActions findWithToken(String uri, String token, Object object) throws Exception {
-		return sendGet(uri, token, object).andExpect(status().isOk());
+	public ResultActions findWithToken(String uri, String token) throws Exception {
+		return sendGet(uri, token).andExpect(status().isOk());
 	}
 
 	public ResultActions deleteWithUnauthorized(String uri) throws Exception {

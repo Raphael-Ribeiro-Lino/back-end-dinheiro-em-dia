@@ -53,19 +53,19 @@ public class FindByIdIncomeControllerTest {
 	
 	@Test
 	void quando_buscarReceitaPorIdSemToken_Entao_RetornaErroAcessoNegado() throws Exception {
-		ResultActions result = mvc.findWithUnauthorized(uri, incomeInput);
+		ResultActions result = mvc.findWithUnauthorized(uri);
 		result.andExpect(jsonPath("$.[?(@.message == 'Acesso Negado!')]").exists());
 	}
 	
 	@Test
 	void quando_buscarReceitaPorIdTokenInvalido_Entao_RetornaErroTokenInvalido() throws Exception {
-		ResultActions result = mvc.findWithUnauthorized(uri, token+1, incomeInput);
+		ResultActions result = mvc.findWithUnauthorized(uri, token+1);
 		result.andExpect(jsonPath("$.[?(@.message == 'Token inválido!')]").exists());
 	}
 	
 	@Test
 	void quando_buscarOrcamentoPorId_Entao_RetornaOk() throws Exception {
-		ResultActions result = mvc.findWithToken(uri, token, incomeInput);
+		ResultActions result = mvc.findWithToken(uri, token);
 		result.andExpect(jsonPath("id").exists());
 		result.andExpect(jsonPath("name").value(incomeInput.getName()));
 		result.andExpect(jsonPath("amount").value(incomeInput.getAmount()));
