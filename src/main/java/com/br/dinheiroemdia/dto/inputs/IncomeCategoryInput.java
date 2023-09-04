@@ -15,6 +15,6 @@ public class IncomeCategoryInput {
 	@Length(max = 255, message = "O nome deve ter no máximo 255 caracteres")
 	private String name;
 	
-	@NotNull(message = "O id da receita é obrigatório")
+	@NotNull(message = "A receita é obrigatória")
 	private Long incomeId;
 }
