@@ -18,6 +18,7 @@ import com.br.dinheiroemdia.converts.IncomeConvert;
 import com.br.dinheiroemdia.dto.inputs.IncomeInput;
 import com.br.dinheiroemdia.dto.outputs.IncomeOutput;
 import com.br.dinheiroemdia.entities.IncomeEntity;
+import com.br.dinheiroemdia.services.IncomeCategoryService;
 import com.br.dinheiroemdia.services.IncomeService;
 
 import jakarta.validation.Valid;
@@ -32,6 +33,9 @@ public class IncomeController {
 
 	@Autowired
 	private IncomeConvert incomeConvert;
+	
+	@Autowired
+	private IncomeCategoryService incomeCategoryService;
 
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
@@ -55,6 +59,7 @@ public class IncomeController {
 	@PodeAcessarSe.EstaAutenticado
 	public void delete(@PathVariable Long id) {
 		IncomeEntity incomeEntity = incomeService.findById(id);
+		incomeCategoryService.deleteCategory(incomeEntity);
 		incomeService.delete(incomeEntity);
 		incomeService.updateBudget(incomeEntity);
 	}

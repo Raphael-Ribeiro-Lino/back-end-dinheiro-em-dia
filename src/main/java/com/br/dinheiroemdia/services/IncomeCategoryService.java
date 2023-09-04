@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.br.dinheiroemdia.entities.IncomeCategoryEntity;
+import com.br.dinheiroemdia.entities.IncomeEntity;
 import com.br.dinheiroemdia.exceptions.BadRequestBussinessException;
 import com.br.dinheiroemdia.exceptions.NotFoundBussinessException;
 import com.br.dinheiroemdia.repositories.IncomeCategoryRepository;
@@ -49,5 +50,19 @@ public class IncomeCategoryService {
 	public IncomeCategoryEntity findById(Long id) {
 		return incomeCategoryRepository.findByIdAndUser(id, tokenService.getUserByToken())
 				.orElseThrow(() -> new NotFoundBussinessException("Categoria " + id + " não encontrada"));
+	}
+
+	@Transactional
+	public void delete(IncomeCategoryEntity incomeCategoryEntity) {
+		incomeCategoryRepository.delete(incomeCategoryEntity);
+	}
+
+	@Transactional
+	public void deleteCategory(IncomeEntity incomeEntity) {
+		List<IncomeCategoryEntity> finByIncomeAndUser = incomeCategoryRepository.finByIncomeAndUser(incomeEntity,
+				tokenService.getUserByToken());
+		for (IncomeCategoryEntity incomeCategoryEntity : finByIncomeAndUser) {
+			delete(incomeCategoryEntity);
+		}
 	}
 }
