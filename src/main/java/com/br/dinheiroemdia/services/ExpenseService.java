@@ -15,13 +15,13 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ExpenseService {
-	
+
 	@Autowired
 	private ExpenseRepository expenseRepository;
-	
+
 	@Autowired
 	private BudgetService budgetService;
-	
+
 	@Autowired
 	private TokenService tokenService;
 
@@ -36,7 +36,7 @@ public class ExpenseService {
 		budgetEntity.setTotalExpense(defineTotalExpense());
 		budgetService.update(budgetEntity);
 	}
-	
+
 	private BigDecimal defineTotalExpense() {
 		List<ExpenseEntity> expenses = expenseRepository.findAll();
 		BigDecimal totalExpense = BigDecimal.ZERO;
@@ -47,12 +47,8 @@ public class ExpenseService {
 	}
 
 	public ExpenseEntity findById(Long id) {
-		ExpenseEntity expenseEntity = expenseRepository.findById(id).orElseThrow(() -> new NotFoundBussinessException("Despesa " + id + " não encontrada"));
-		if(expenseEntity.getBudget().getUser() == tokenService.getUserByToken()) {
-			return expenseEntity;
-		}else {
-			throw new NotFoundBussinessException("Despesa " + id + " não encontrada");
-		}
+		return expenseRepository.findByIdAndUser(id, tokenService.getUserByToken())
+				.orElseThrow(() -> new NotFoundBussinessException("Despesa " + id + " não encontrada"));
 	}
 
 	@Transactional
