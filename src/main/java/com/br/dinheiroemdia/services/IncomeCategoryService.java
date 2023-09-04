@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.br.dinheiroemdia.entities.IncomeCategoryEntity;
 import com.br.dinheiroemdia.exceptions.BadRequestBussinessException;
+import com.br.dinheiroemdia.exceptions.NotFoundBussinessException;
 import com.br.dinheiroemdia.repositories.IncomeCategoryRepository;
 
 import jakarta.transaction.Transactional;
@@ -43,5 +44,10 @@ public class IncomeCategoryService {
 
 	public Page<IncomeCategoryEntity> list(Pageable pagination) {
 		return incomeCategoryRepository.findAllByUser(pagination, tokenService.getUserByToken());
+	}
+
+	public IncomeCategoryEntity findById(Long id) {
+		return incomeCategoryRepository.findByIdAndUser(id, tokenService.getUserByToken())
+				.orElseThrow(() -> new NotFoundBussinessException("Categoria " + id + " não encontrada"));
 	}
 }

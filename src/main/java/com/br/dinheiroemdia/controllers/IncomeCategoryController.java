@@ -8,6 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,8 +47,16 @@ public class IncomeCategoryController {
 	}
 	
 	@GetMapping
+	@PodeAcessarSe.EstaAutenticado
 	public Page<IncomeCategoryOutput> list(@PageableDefault(size = 10, sort = "name", direction = Direction.ASC) Pageable pagination){
 		Page<IncomeCategoryEntity> incomeCategories = incomeCategoryService.list(pagination);
 		return incomeCategoryConvert.pageEntityToOutput(incomeCategories);
+	}
+	
+	@GetMapping("/{id}")
+	@PodeAcessarSe.EstaAutenticado
+	public IncomeCategoryOutput findById(@PathVariable Long id) {
+		IncomeCategoryEntity incomeCategoryEntity = incomeCategoryService.findById(id);
+		return incomeCategoryConvert.entityToOutput(incomeCategoryEntity);
 	}
 }
