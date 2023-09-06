@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.br.dinheiroemdia.configs.ControllerConfig;
+import com.br.dinheiroemdia.configs.securities.PodeAcessarSe;
 import com.br.dinheiroemdia.converts.UserConvert;
 import com.br.dinheiroemdia.dto.inputs.EmailRedefinePasswordInput;
 import com.br.dinheiroemdia.dto.inputs.RedefinePasswordInput;
@@ -20,6 +21,7 @@ import com.br.dinheiroemdia.dto.inputs.UserInput;
 import com.br.dinheiroemdia.dto.outputs.UserOutput;
 import com.br.dinheiroemdia.entities.UserEntity;
 import com.br.dinheiroemdia.services.RedefinePasswordService;
+import com.br.dinheiroemdia.services.TokenService;
 import com.br.dinheiroemdia.services.UserService;
 
 import jakarta.validation.Valid;
@@ -38,6 +40,9 @@ public class UserController {
 	@Autowired
 	private RedefinePasswordService redefinePasswordService;
 
+	@Autowired
+	private TokenService tokenService;
+	
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public UserOutput register(@RequestBody @Valid UserInput userInput) {
@@ -64,5 +69,12 @@ public class UserController {
 	public void redefinePassword(@RequestBody @Valid RedefinePasswordInput input, @PathVariable String hash) {
 		UserEntity userEntity = redefinePasswordService.findUserByHash(hash);
 		userService.redefinePassword(userEntity, input.getPassword(), input.getRepeatPassword(), hash);
+	}
+	
+	@GetMapping
+	@PodeAcessarSe.EstaAutenticado
+	public UserOutput findByToken() {
+		UserEntity userFound = tokenService.getUserByToken();
+		return userConvert.entityToOutput(userFound);
 	}
 }
